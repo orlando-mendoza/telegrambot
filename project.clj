@@ -7,11 +7,16 @@
 
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [environ             "1.1.0"]
-                 [morse               "0.2.4"]]
+                 [morse               "0.4.3"]]
 
   :plugins [[lein-environ "1.1.0"]]
 
   :main ^:skip-aot telegrambot.core
   :target-path "target/%s"
 
-  :profiles {:uberjar {:aot :all}})
+  :profiles {:uberjar {:aot :all}}
+
+  :env {:telegram-token "933749967:AAEzyIPIdKgV0md5y6Tdp1eEGdFLYsaS-yk"}
+
+  )
+
