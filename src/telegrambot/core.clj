@@ -4,7 +4,9 @@
             [environ.core :refer [env]]
             [morse.handlers :as h]
             [morse.polling :as p]
-            [morse.api :as t])
+            [morse.api :as t]
+            [cheshire.core :refer [parse-string]]
+            [morse.api :as api])
   (:gen-class))
 
 ; TODO: fill correct token
@@ -12,6 +14,16 @@
 
 (def writer (clojure.java.io/writer "message.log" :append true))
 
+(defn weather [city]
+  (let [request (str "http://api.openweathermap.org/data/2.5/weather?q="
+                     city
+                     "&units=metric&APPID="
+                     (env :openweather-api-token))]
+    (:main
+      (parse-string (slurp request) true))))
+                    ;(fn [k] (keyword k))
+                    ;true
+                    ;))))
 
 (h/defhandler handler
 
@@ -24,6 +36,16 @@
                             (fn [{{id :id :as chat} :chat}]
                               (println "Help was requested in " chat)
                               (t/send-text token id "Help is on the way")))
+
+              (h/command-fn "weather"
+                            (fn [{{id :id} :chat :as message}]
+                              (println "Weather was requested for"
+                                       (str/replace (:text message) #"\/{1}(\w+)\s{1}" ""))
+                              (let [place (str/replace (:text message) #"\/{1}(\w+)\s{1}" "")]
+                                (try
+                                  (t/send-text token id
+                                               (str place "\n" (weather place)))
+                                  (catch Exception e (println (.getMessage e)))))))
 
               (h/inline-fn
                 (fn [inline]
@@ -46,9 +68,14 @@
                   (clojure.pprint/pprint message writer)
                   (t/send-text token id (str/reverse (:text message))))))
 
-
-
-
+(h/defhandler weather-mode
+            (h/message-fn
+              (fn [{{id :id} :chat :as message}]
+                (let [place (:text message)]
+                  (try
+                     (api/send-text token id {:parse_mode "MarkdownV2"}
+                                    (str "**" place "**" "\n" (weather place)))
+                     (catch Exception e))))))
 
 
 

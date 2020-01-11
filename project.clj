@@ -7,7 +7,8 @@
 
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [environ             "1.1.0"]
-                 [morse               "0.4.3"]]
+                 [morse               "0.4.3"]
+                 [cheshire/cheshire   "5.9.0"]]
 
   :plugins [[lein-environ "1.1.0"]]
 
@@ -16,7 +17,8 @@
 
   :profiles {:uberjar {:aot :all}}
 
-  :env {:telegram-token "933749967:AAEzyIPIdKgV0md5y6Tdp1eEGdFLYsaS-yk"}
+  :env {:telegram-token "933749967:AAEzyIPIdKgV0md5y6Tdp1eEGdFLYsaS-yk"
+        :openweather-api-token "9512127432cafb5c1dd699b631c5d7bc"}
 
   )
 
