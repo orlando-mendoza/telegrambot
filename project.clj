@@ -17,8 +17,8 @@
 
   :profiles {:uberjar {:aot :all}}
 
-  :env {:telegram-token "933749967:AAEzyIPIdKgV0md5y6Tdp1eEGdFLYsaS-yk"
-        :openweather-api-token "9512127432cafb5c1dd699b631c5d7bc"}
+  :env {:telegram-token "your-telegram-token-here"
+        :openweather-api-token "your-openweather-api-token-here"}
 
   )
 
