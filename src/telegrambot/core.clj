@@ -14,16 +14,14 @@
 
 (def writer (clojure.java.io/writer "message.log" :append true))
 
+; Accoding to openweather city followed by , and two letters for country works best eg. Tokyo, JP
 (defn weather [city]
   (let [request (str "http://api.openweathermap.org/data/2.5/weather?q="
                      city
                      "&units=metric&APPID="
                      (env :openweather-api-token))]
     (:main
-      (parse-string (slurp request) true))))
-                    ;(fn [k] (keyword k))
-                    ;true
-                    ;))))
+      (parse-string (slurp request) (fn [k] (keyword k))))))
 
 (h/defhandler handler
 
@@ -67,16 +65,6 @@
                   (t/send-text token id "I don't do a whole lot ... yet.")
                   (clojure.pprint/pprint message writer)
                   (t/send-text token id (str/reverse (:text message))))))
-
-(h/defhandler weather-mode
-            (h/message-fn
-              (fn [{{id :id} :chat :as message}]
-                (let [place (:text message)]
-                  (try
-                     (api/send-text token id {:parse_mode "MarkdownV2"}
-                                    (str "**" place "**" "\n" (weather place)))
-                     (catch Exception e))))))
-
 
 
 (defn -main
